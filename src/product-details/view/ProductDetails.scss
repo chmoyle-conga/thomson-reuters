@@ -1,0 +1,18 @@
+.product-details{
+    .border-secondary{
+        border-width: 2px !important;
+    }
+    .pricing-dropdown{
+        button{
+            color: inherit;
+            
+            &.button-chevron{
+                flex: 0 1 auto;
+            }
+        }
+        .dropdown-menu.show{
+            width: 100%;
+        }
+    }
+    
+}

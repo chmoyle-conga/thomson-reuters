@@ -1,0 +1,19 @@
+
+$primary: #ff5900 !default;
+$secondary: #d0d0d0 !default;
+$info: #005e7e !default;
+$font-family-base: Knowledge !default;
+$body-color: #4d4d4d !default;
+
+
+@import "~bootstrap/scss/functions"; 
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+
+
+$breadcrumb-bg:                     $white;
+$breadcrumb-divider-color:          $gray-600;
+$breadcrumb-active-color:           $gray-600 ;
+$breadcrumb-divider:                quote(">");
+$breadcrumb-border-radius:          $border-radius;

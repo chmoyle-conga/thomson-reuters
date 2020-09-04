@@ -1,0 +1,42 @@
+@import "src/variables";
+
+$navbar-height: 78px;
+
+.navbar{
+    &.top{
+        font-size: small;
+        border-top: 4px solid $primary;
+        .nav-actions span{
+            margin: 0 0.5rem;
+        }
+    }
+    &.bottom{
+        padding: 0;
+        .container{
+            height: $navbar-height;
+            .navbar-brand{
+                margin-right: 0;
+            }
+            .logo-border{
+                margin: 0 1rem 0 0;
+                color: $secondary;
+            }
+            .dropdown.nav-item{
+                height: $navbar-height;
+                display: flex;
+                align-items: center;
+                border-bottom: 4px solid $light;
+                &:hover{
+                    border-color: $primary;
+                }
+                a{
+                    color: $body-color;
+                    &::after{
+                        color: $primary;
+                    }
+                }
+            }
+        }
+    }
+    border-bottom: 1px solid $secondary;
+}
