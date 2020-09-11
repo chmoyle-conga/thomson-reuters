@@ -3,7 +3,7 @@ import './Header.scss';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-
+import MiniCart from '../mini-cart/MiniCart';
 
 export default class Header extends React.Component{
 
@@ -15,7 +15,7 @@ export default class Header extends React.Component{
                     <div className="d-flex nav-actions">
                         <span>Contact Us</span>
                         <span>Sign In</span>
-                        <span>Cart (0)</span>
+                        <MiniCart/>
                     </div>
                 </div>
             </nav>
@@ -71,7 +71,7 @@ export default class Header extends React.Component{
                             </NavDropdown>
                         </Nav>
                     </Navbar.Collapse>
-                   
+                
                 </div>
             </nav>
         </div>

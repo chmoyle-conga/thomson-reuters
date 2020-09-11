@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 
@@ -9,36 +9,58 @@ import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
 import ProductDetails from './product-details/view/ProductDetails';
+import { Provider } from 'react-redux'
+import store from './store/Cart';
+import CartApi from './store/CartApi';
+import CartDetails from './cart-details/view/CartDetails';
 
+const App = () => {
+
+  CartApi.refresh();
+
+  return (
+      <Fragment>
+        <Header/>
+        <div className="container">
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={(props) => (<Redirect to="/products" />)}
+            />
+            <Route 
+              exact
+              path="/products"
+              render={() => (<ProductList/>)}
+            />
+            <Route 
+              exact
+              path="/products/:productId"
+              component={ProductDetails}
+            />
+            <Route
+              exact
+              path="/cart"
+              component={CartDetails}
+            />
+          </Switch>
+        </div>
+      </Fragment>
+  );
+}
 
 ReactDOM.render(
-  <HashRouter>
-    <React.StrictMode>
-      <Header/>
-      <div className="container">
-        <Switch>
-          <Route
-            exact
-            path="/"
-            render={(props) => (<Redirect to="/products" />)}
-          />
-          <Route 
-            exact
-            path="/products"
-            render={() => (<ProductList/>)}
-          />
-          <Route 
-            exact
-            path="/products/:productId"
-            component={ProductDetails}
-          />
-        </Switch>
-        
-      </div>
-    </React.StrictMode>
-  </HashRouter>,
+  <Provider store={store}>
+      <HashRouter>
+        <React.StrictMode>
+          <App/>
+        </React.StrictMode>
+      </HashRouter>
+    </Provider>,
   document.getElementById('root')
 );
+
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

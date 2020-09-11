@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Icons/1. UI/Cart</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M7,20 C6.449,20 6,20.448 6,21 C6,21.552 6.449,22 7,22 C7.551,22 8,21.552 8,21 C8,20.448 7.551,20 7,20 Z M19,20 C18.449,20 18,20.448 18,21 C18,21.552 18.449,22 19,22 C19.551,22 20,21.552 20,21 C20,20.448 19.551,20 19,20 Z M7,24 C5.346,24 4,22.654 4,21 C4,19.346 5.346,18 7,18 C8.654,18 10,19.346 10,21 C10,22.654 8.654,24 7,24 Z M19,24 C17.346,24 16,22.654 16,21 C16,19.346 17.346,18 19,18 C20.654,18 22,19.346 22,21 C22,22.654 20.654,24 19,24 Z M6.0005,17 C5.4995,17 5.0755,16.629 5.0085,16.132 L3.1245,2 L1.0005,2 C0.4475,2 0.0005,1.552 0.0005,1 C0.0005,0.448 0.4475,0 1.0005,0 L4.0005,0 C4.5005,0 4.9245,0.371 4.9915,0.868 L5.5425,5 L22.0005,5 C22.2995,5 22.5835,5.134 22.7735,5.366 C22.9635,5.598 23.0395,5.902 22.9805,6.196 L20.9805,16.196 C20.8875,16.663 20.4765,17 20.0005,17 L6.0005,17 Z M6.8755,15 L19.1805,15 L20.7805,7 L5.8095,7 L6.8755,15 Z" id="path-1"></path>
+    </defs>
+    <g id="Icons/1.-UI/Cart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Shape" fill="#4D4D4D" xlink:href="#path-1"></use>
+        <g id="🌈-Colour" mask="url(#mask-2)" fill="#4D4D4D">
+            <g id="Colors/Primary/TR-Dark-Gray">
+                <polygon id="#4D4D4D" points="0 0 24 0 24 24 0 24"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

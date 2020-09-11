@@ -2,8 +2,6 @@ const TOKEN_KEY = 'access-token';
 const ENDPOINT = 'https://apttussdk-taxandaccounting.cs125.force.com/store';
 
 export class ApiService{
-    
-
 
     async get(endpoint){
         return this.doFetch(endpoint, 'GET');
@@ -28,7 +26,8 @@ export class ApiService{
         const url = `${ENDPOINT}/services/apexrest/Apttus_WebStore/apttus/v1${path}`;
 
         const headers = new Headers({
-            'x-storefront': 'ECommerce'
+            'x-storefront': 'ECommerce',
+            'Content-Type': 'application/json'
         });
 
         if(!anonymous){
@@ -40,7 +39,7 @@ export class ApiService{
             method: method,
             cache: 'default',
             headers: headers,
-            body: payload
+            body: (payload != null) ? JSON.stringify(payload) : null
         });
 
         return fetch(request)

@@ -1,0 +1,30 @@
+.mini-cart{
+    position: relative;
+    padding-right: 30px;
+    .cart-icon{
+        background: url('../../assets/icons/Cart.svg') no-repeat;
+        padding-left: 24px;
+        height: 24px;
+        position: absolute;
+        right: 0;
+        top: -2px;
+    }
+}
+
+.add-product-modal.modal{
+    overflow-y: hidden;
+    
+    .modal-dialog{
+        position: absolute;
+        right: 0;
+        height: 100%;
+        margin: 0;
+        width: 438px;
+        .modal-content{
+            height: 100%;
+            border-radius: 0;
+            border: none;
+            padding: 0 2rem;
+        }
+    }
+}

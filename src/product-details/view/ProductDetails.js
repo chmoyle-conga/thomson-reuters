@@ -10,24 +10,30 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
+import CartApi from '../../store/CartApi';
+
 export default class ProductDetails extends React.Component{
     
     params;
-
+    apiService;
+    
     constructor(props){
         super(props);
         this.params = props.match.params;
         this.state = {
             product: null
         }
+        this.apiService = new ApiService();
     }
 
     async componentDidMount(){
-        const apiService = new ApiService();
         this.setState({
-            product: await apiService.get(`/products/${this.params.productId}`)
+            product: await this.apiService.get(`/products/${this.params.productId}`)
         });
-        console.log(this.state.product);
+    }
+
+    addToCart(productId){
+        CartApi.addToCart(productId, 1);
     }
 
     render(){
@@ -47,7 +53,7 @@ export default class ProductDetails extends React.Component{
                             <p>Author: {this.state.product.LCRM_Author}</p>
                         </div>
                         
-                        <div class="mb-4">
+                        <div className="mb-4">
                             <h1 className="pb-4 font-weight-light border-bottom border-secondary mb-4">Formats and Pricing</h1>
                             
 
@@ -56,7 +62,7 @@ export default class ProductDetails extends React.Component{
                                 <Button size="lg" variant="outline-primary" active className="px-5">{this.state.product.Format}</Button>
                             </div>
                             
-                            <div class="mb-4">
+                            <div className="mb-4">
                                 <h5 className="mb-3">Pricing Terms:</h5>
                                 <Dropdown as={ButtonGroup} className="w-50 pricing-dropdown" alignRight>
                                     <Button variant="outline-secondary">- Select Pricing Option -</Button>
@@ -64,8 +70,8 @@ export default class ProductDetails extends React.Component{
 
                                     <Dropdown.Menu>
                                         {
-                                            this.state.product.PriceLists.map(pli => (
-                                                <Dropdown.Item href="#/action-1">One time purchase - <Currency quantity={pli.ListPrice} currency="USD"/></Dropdown.Item>
+                                            this.state.product.PriceLists.map((pli, index) => (
+                                                <Dropdown.Item href="#/action-1" key={index}>One time purchase - <Currency quantity={pli.ListPrice} currency="USD"/></Dropdown.Item>
                                             ))
                                         }
                                     </Dropdown.Menu>
@@ -94,12 +100,12 @@ export default class ProductDetails extends React.Component{
                                 </Col>
                             </Form.Group>
 
-                            <Button variant="primary" size="lg">Add to Cart</Button>
+                            <Button variant="primary" size="lg" onClick={(e) => this.addToCart(this.state.product.Id)}>Add to Cart</Button>
                         </div>
-                        <div class="mb-4">
+                        <div className="mb-4">
                             <h1 className="pb-4 font-weight-light border-bottom border-secondary mb-4">What's Inside</h1>
                         </div>
-                        <div class="mb-4">
+                        <div className="mb-4">
                             <h1 className="pb-4 font-weight-light border-bottom border-secondary mb-4">Details and Specs</h1>
                             <p>{this.state.product.Description}</p>
                         </div>
