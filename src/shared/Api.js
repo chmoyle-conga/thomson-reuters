@@ -11,6 +11,18 @@ export class ApiService{
         return this.doFetch(endpoint, 'POST', payload)
     }
 
+    async del(endpoint){
+        return this.doFetch(endpoint, 'DELETE');
+    }
+
+    async put(endpoint, payload){
+        return this.doFetch(endpoint, 'PUT', payload);
+    }
+
+    async patch(endpoint, payload){
+        return this.doFetch(endpoint, 'PATCH', payload);
+    }
+
     async getToken(){
         if(localStorage.getItem(TOKEN_KEY) != null)
             return localStorage.getItem(TOKEN_KEY);
@@ -23,7 +35,7 @@ export class ApiService{
 
     async doFetch(path, method, payload, anonymous, retry){
             
-        const url = `${ENDPOINT}/services/apexrest/Apttus_WebStore/apttus/v1${path}`;
+        const url = `${ENDPOINT}/services/apexrest/Apttus_WebStore/apttus/v2${path}`;
 
         const headers = new Headers({
             'x-storefront': 'ECommerce',

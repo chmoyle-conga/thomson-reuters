@@ -39,21 +39,21 @@ export default class ProductList extends React.Component{
                             <h2>Law Books</h2>
                     </div>
                     <div className="col-5">
-                            <Form.Group as={Row} controlId="formPlaintextPassword">
-                                <Form.Label column sm="4">
-                                    Sort By
-                                </Form.Label>
-                                <Col sm="8">
-                                    <Form.Control as="select">
-                                        <option>Publication Date</option>
-                                        <option>Relevance</option>
-                                        <option>Title: A-Z</option>
-                                        <option>Title: Z-A</option>
-                                        <option>Price (Low to High)</option>
-                                        <option>Price (High to Low)</option>
-                                    </Form.Control>
-                                </Col>
-                            </Form.Group>
+                        <Form.Group as={Row} controlId="formPlaintextPassword">
+                            <Form.Label column sm="4">
+                                Sort By
+                            </Form.Label>
+                            <Col sm="8">
+                                <Form.Control as="select">
+                                    <option>Publication Date</option>
+                                    <option>Relevance</option>
+                                    <option>Title: A-Z</option>
+                                    <option>Title: Z-A</option>
+                                    <option>Price (Low to High)</option>
+                                    <option>Price (High to Low)</option>
+                                </Form.Control>
+                            </Col>
+                        </Form.Group>
                     </div>
                 </div>
                 <div className="my-3">

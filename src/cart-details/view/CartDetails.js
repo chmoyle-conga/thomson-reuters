@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Breadcrumb, Form, Card, Button } from 'react-bootstrap';
+import { Row, Col, Breadcrumb } from 'react-bootstrap';
+import OrderSummary from '../components/OrderSummary';
+import Promo from '../components/Promo';
+import CartItemRow from '../components/CartItemRow';
 
 class CartDetails extends React.Component{
 
     render(){
-        const { lines } = this.props;
-        console.log(lines);
+        const { lines, total } = this.props;
         if(lines && lines.length > 0){
             return <div>
 
@@ -36,60 +38,15 @@ class CartDetails extends React.Component{
                         </Row>
 
                         {
-                            lines.map(line => (
-                                <Row key={line.Id} className="border-bottom border-secondary py-3">
-                                    <Col xs="7">
-                                        <h5 className="text-info">{line.Product.Name}</h5>
-
-                                        <p>
-                                            <strong>Publisher:</strong> {line.Product.Publisher_Description}
-                                        </p>
-                                        <p>
-                                            <strong>Format:</strong> {line.Product.Format}
-                                        </p>
-                                        <p>
-                                            <strong>Availability:</strong> In Stock
-                                        </p>
-                                        <p>
-                                            <strong>Pricing Terms:</strong> One Time Purchase
-                                        </p>
-                                        <p>
-                                            <strong>Price:</strong> $142.00
-                                        </p>
-
-                                    </Col>
-                                    <Col xs="3">
-                                        <Form.Control as="select" custom className="w-50" size="lg">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                        </Form.Control>
-                                    </Col>
-                                    <Col xs="2" className="d-flex justify-content-end">
-                                        <span>$142.00</span>
-                                    </Col>
-                                </Row>
+                            lines.map((line, index) => (
+                                <CartItemRow line={line} key={index}/>
                             ))
                         }
                     </Col>
                     <Col xs="12" sm="4" className="pl-5">
-                        <Card className="py-3">
-                            <Card.Body>
-                                <h5>Apply Promo Code</h5>
-                                <div className="d-flex mb-2">
-                                    <Form.Control
-                                        className="mr-sm-2"
-                                        id="inlineFormInputName2"
-                                        placeholder="Promo Code"
-                                        size="lg"
-                                    />
-                                    <Button type="submit" className="text-body" variant="outline-secondary" size="lg">
-                                        Apply
-                                    </Button>
-                                </div>
-                            </Card.Body>
-                        </Card>
+                        <Promo/>
+
+                        <OrderSummary total={total}/>
                     </Col>
                 </Row>
             </div>
@@ -100,7 +57,8 @@ class CartDetails extends React.Component{
 
 const mapStateToProps = state => {
     return {
-        lines: state.cart.lines
+        lines: state.cart.lines,
+        total: state.cart.total
     }   
 };
 
