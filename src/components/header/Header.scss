@@ -31,8 +31,18 @@ $navbar-height: 78px;
                 }
                 a{
                     color: $body-color;
+                    font-weight: bold;
                     &::after{
                         color: $primary;
+                        background: url('../../assets/icons/icon-chevron-down.svg') no-repeat;
+                        border: none;
+                        width: 20px;
+                        padding-top: 12px;
+                        /* margin-left: 8px; */
+                        position: absolute;
+                        top: 42%;
+                        -webkit-filter: invert(34%) sepia(81%) saturate(2655%) hue-rotate(6deg) brightness(108%) contrast(104%);
+                        filter: invert(34%) sepia(81%) saturate(2655%) hue-rotate(6deg) brightness(108%) contrast(104%);
                     }
                 }
             }

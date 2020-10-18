@@ -13,6 +13,8 @@ import { Provider } from 'react-redux'
 import store from './store/Cart';
 import CartApi from './store/CartApi';
 import CartDetails from './cart-details/view/CartDetails';
+import { Footer } from './components/footer/Footer';
+import Checkout from './checkout/view/Checkout';
 
 const App = () => {
 
@@ -21,7 +23,7 @@ const App = () => {
   return (
       <Fragment>
         <Header/>
-        <div className="container">
+        <main className="container">
           <Switch>
             <Route
               exact
@@ -43,8 +45,14 @@ const App = () => {
               path="/cart"
               component={CartDetails}
             />
+            <Route
+              exact
+              path="/checkout"
+              component={Checkout}
+            />
           </Switch>
-        </div>
+        </main>
+        <Footer/>
       </Fragment>
   );
 }
@@ -52,9 +60,7 @@ const App = () => {
 ReactDOM.render(
   <Provider store={store}>
       <HashRouter>
-        <React.StrictMode>
           <App/>
-        </React.StrictMode>
       </HashRouter>
     </Provider>,
   document.getElementById('root')

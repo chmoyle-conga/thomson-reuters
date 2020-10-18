@@ -57,3 +57,8 @@ p{
 strong{
   font-weight: 500;
 }
+
+main{
+  min-height: calc(100vh - 634px);
+  padding-bottom: 40px;
+}

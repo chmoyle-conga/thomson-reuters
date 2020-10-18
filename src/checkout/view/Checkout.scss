@@ -1,0 +1,23 @@
+@import "src/variables";
+
+.checkout{
+    .step-number-container{
+        background: linear-gradient($primary, $primary) no-repeat center/1px 100%;
+        .step-number{
+            background-color:white;
+            border: 1px solid $primary;
+            padding: 2px 11px;
+        }
+    }
+    .accordion>button.btn-block{
+        border: none;
+    }
+    label{
+        font-size: small;
+    }
+    .billing-method{
+        &>div{
+            border-radius: 5px;
+        }
+    }
+}

@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import Currency from 'react-currency-formatter';
+import { Link } from 'react-router-dom';
 
 export default class OrderSummary extends React.Component{
     
@@ -13,7 +14,7 @@ export default class OrderSummary extends React.Component{
     }
 
     render(){
-        const { total } = this.props;
+        const { total, checkoutHidden } = this.props;
         return <Card className="py-3">
             <Card.Body>
                 <h5>Order Summary</h5>
@@ -31,19 +32,25 @@ export default class OrderSummary extends React.Component{
 
                 <div className="d-flex justify-content-between font-weight-bold">
                     <span>Est. total due today</span>
-                    <span><Currency quantity={(total && total.Total) ? total.Total[0].NetPrice : 0} currency="USD"/></span>
+                    <h5 className="m-0"><Currency quantity={(total && total.Total) ? total.Total[0].NetPrice : 0} currency="USD"/></h5>
                 </div>
 
                 <div className="d-flex justify-content-between font-weight-bold">
                     <span>Est. total due monthly</span>
-                    <span>$0.00</span>
+                    <h5 className="m-0">$0.00</h5>
                 </div>
-                <small>Sales tax for your order will reflect applicable state and local taxes and will be finalized upon shipment.</small>
+                <small className="my-3 d-block">Sales tax for your order will reflect applicable state and local taxes and will be finalized upon shipment.</small>
 
-                <Button type="submit" className="btn-block" variant="primary" size="lg">
-                    Continue to Checkout
-                    <FontAwesomeIcon icon={faLock} className="ml-3" size="sm"/>
-                </Button>
+                {
+                    !checkoutHidden &&
+                        <Link to={`/checkout`} className="text-decoration-none">
+                            <Button type="submit" className="btn-block" variant="primary" size="lg">
+                                Continue to Checkout
+                                <FontAwesomeIcon icon={faLock} className="ml-3" size="sm"/>
+                            </Button>
+                        </Link>
+                }
+                
             </Card.Body>
         </Card>
     }

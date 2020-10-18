@@ -107,7 +107,7 @@ const CartApi = {
 
             try{
                 const cartId = localStorage.getItem('cartId');
-                await api.del(`/carts/${cartId}/items/${lineItemId}`);
+                await api.del(`/carts/${cartId}/items/${lineItemId}?price=skip&rules=skip`);
                 dispatch(removeFinish(lineItemId));
                 CartApi.priceCart();
             }catch(error){

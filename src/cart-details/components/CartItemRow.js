@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import { Button } from 'react-bootstrap';
 import CartApi from '../../store/CartApi';
 import Currency from 'react-currency-formatter';
+import { Link } from 'react-router-dom';
 
 export default class CartItemRow extends React.Component{
 
@@ -27,7 +28,9 @@ export default class CartItemRow extends React.Component{
         const { line } = this.props;
         return <Row key={line.Id} className="border-bottom border-secondary py-3">
             <Col xs="7">
-                <h5 className="text-info">{line.Product.Name}</h5>
+                <h5 className="text-info">
+                    <Link to={`/products/${line.ProductId}`} className="text-info">{line.Product.Name}</Link>
+                </h5>
 
                 <p>
                     <strong>Publisher:</strong> {line.Product.Publisher_Description}

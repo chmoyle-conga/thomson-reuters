@@ -4,7 +4,12 @@ $secondary: #d0d0d0 !default;
 $info: #005e7e !default;
 $font-family-base: Knowledge !default;
 $body-color: #212529 !default;
-
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1165px
+) !default;
 
 @import "~bootstrap/scss/functions"; 
 @import "~bootstrap/scss/variables";
@@ -17,3 +22,4 @@ $breadcrumb-divider-color:          $gray-600;
 $breadcrumb-active-color:           $gray-600 ;
 $breadcrumb-divider:                quote(">");
 $breadcrumb-border-radius:          $border-radius;
+
