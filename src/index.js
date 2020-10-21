@@ -10,11 +10,13 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
 import ProductDetails from './product-details/view/ProductDetails';
 import { Provider } from 'react-redux'
-import store from './store/Cart';
 import CartApi from './store/CartApi';
 import CartDetails from './cart-details/view/CartDetails';
 import { Footer } from './components/footer/Footer';
 import Checkout from './checkout/view/Checkout';
+import Review from './review/view/Review';
+import store from './store/Store';
+
 
 const App = () => {
 
@@ -50,6 +52,11 @@ const App = () => {
               path="/checkout"
               component={Checkout}
             />
+            <Route
+              exact
+              path="/review"
+              component={Review}
+            />
           </Switch>
         </main>
         <Footer/>
@@ -67,8 +74,7 @@ ReactDOM.render(
 );
 
 
-
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();

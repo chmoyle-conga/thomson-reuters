@@ -1,0 +1,14 @@
+@import "src/variables";
+
+.review{
+    .line-item-row{
+        p{
+            margin-bottom: 8px;
+        }
+    }
+    .summary-group{
+        .justify-content-between{
+            margin-bottom: .3rem;
+        }
+    }
+}

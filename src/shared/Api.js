@@ -35,7 +35,7 @@ export class ApiService{
 
     async doFetch(path, method, payload, anonymous, retry){
             
-        const url = `${ENDPOINT}/services/apexrest/Apttus_WebStore/apttus/v2${path}`;
+        const url = `${ENDPOINT}/services/apexrest/Apttus_WebStore/apttus/v3${path}`;
 
         const headers = new Headers({
             'x-storefront': 'ECommerce',

@@ -21,7 +21,7 @@ class CartDetails extends React.Component{
                 <Breadcrumb.Item active>Cart</Breadcrumb.Item>
             </Breadcrumb>
 
-            <h1 className="my-5">Cart</h1>
+            <h1 className="my-5 font-weight-normal">Cart</h1>
 
                 <Row>
                     <Col xs="12" sm="8">
@@ -44,7 +44,7 @@ class CartDetails extends React.Component{
                         }
                     </Col>
                     <Col xs="12" sm="4" className="pl-5">
-                        <Promo/>
+                        <Promo lines={lines}/>
 
                         <OrderSummary total={total}/>
                     </Col>

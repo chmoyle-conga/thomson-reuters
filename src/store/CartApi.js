@@ -1,5 +1,7 @@
-import store, { CART_ACTION } from './Cart';
+import { CART_ACTION } from './Cart';
+import store from './Store';
 import { ApiService } from "../shared/Api";
+import { find, first, get, isEmpty, isNil, join, map, uniq, compact} from 'lodash';
 
 const api = new ApiService();
 
@@ -36,10 +38,17 @@ const priceStart = data => ({
     type: CART_ACTION.PRICE_START
 })
 
+const promoFinish = data => ({
+    type: CART_ACTION.FINISH_PROMOTION_FETCH,
+    payload: data
+})
+
 const priceFinish = data => ({
     type: CART_ACTION.PRICE_FINISH,
     payload: data
 })
+
+const cartItemLookups = `ProductId,PriceListItemId`;
 
 const CartApi = {
     refresh: () => {
@@ -47,36 +56,132 @@ const CartApi = {
             dispatch(fetchStart());
             try{    
                 const cartId = localStorage.getItem('cartId');
-                if(!cartId){
-                    const cartList = await api.post('/carts', {});
-                    localStorage.setItem('cartId', cartList[0].Id);
-                    dispatch(fetchFinish(cartList[0]));
-                }else{
-                    const data = await api.get(`/carts/${cartId}`);
-                    dispatch(fetchFinish(data));
-                }    
+                
+                const cart = (isNil(cartId)) ? first(await api.post(`/carts`, {})) : await api.get(`/carts/${cartId}?children=SummaryGroups`);
+                localStorage.setItem('cartId', cart.Id);
+                if(cartId)
+                    cart.LineItems = await api.get(`/cartitems?condition[0]=ConfigurationId,Equal,${cartId}&lookups=${cartItemLookups}`);
+                
+                dispatch(fetchFinish(cart));
             }catch(error){
                 dispatch(fetchFail(error));
             }
         })
     },
 
-    addToCart: (productId, quantity) => {
+    fetchPromotions: () => {
+        store.dispatch(async dispatch => {
+            const incentiveIds = compact(uniq(map(store.getState().cart.lines, 'IncentiveId')));
+            if(!isEmpty(incentiveIds)){
+                const incentives = await api.post(`/apttus_config2__incentive__c/query`, {
+                    conditions : [
+                        {
+                            field: 'Id',
+                            filterOperator: 'In',
+                            value: join(incentiveIds, ',')
+                        }
+                    ]
+                });
+                dispatch(promoFinish(incentives));
+            }else
+                dispatch(promoFinish(null));
+        });
+    },
+
+    checkout: () => {
+        store.dispatch(async dispatch => {
+            dispatch({type: 'CHECKOUT_START'});
+            try{
+                const cartId = localStorage.getItem('cartId');
+                
+                // Stubbed in required fields
+                await api.post(`/carts/${cartId}/checkout`, {
+                    Contact: {
+                        Email: 'chmoyle@conga.com',
+                        LastName: 'Moyle',
+                        FirstName: 'Christopher',
+                        MailingStreet: '1400 Fashion Island Blvd #100',
+                        MailingCity: 'San Mateo',
+                        MailingPostalCode: '94404'
+                    }
+                });
+            }catch(error){
+                dispatch({type: 'CHECKOUT_FAIL', payload: error});
+            }
+        })
+    },
+
+    applyPromotion: (couponCode) => {
+        store.dispatch(async dispatch => {
+            dispatch(fetchStart());
+            try{
+                const cartId = localStorage.getItem('cartId');
+                await api.post(`/carts/${cartId}/promotions?mode=turbo&price=skip`, {
+                    code: couponCode
+                })
+                CartApi.priceCart(true);
+            }catch(error){
+                dispatch(fetchFail(error));
+            }
+        });
+    },
+
+    removePromotion: (couponCode) => {
+        store.dispatch(async dispatch => {
+            dispatch(fetchStart());
+            try{
+                const cartId = localStorage.getItem('cartId');
+                await api.del(`/carts/${cartId}/promotions/${couponCode}?mode=turbo&price=skip`);
+                CartApi.priceCart(true);
+            }catch(error){
+                dispatch(fetchFail(error));
+            }
+        });
+    },
+
+    /**
+     * Add to cart method
+     */
+    addToCart: (productId, quantity, priceListItemId) => {
         store.dispatch(async dispatch => {
             dispatch(fetchStart());
             
             try{
                 const cartId = localStorage.getItem('cartId');
-                const data = await api.post(`/carts/${cartId}/items?price=skip&rules=skip&lookups=ProductId`, {
-                    ProductId: productId,
-                    Quantity: quantity
-                });
+                const cart = store.getState().cart;
+
+                // Find the existing line item in the cart.
+                const cartItem = find(get(cart, 'lines'), {ProductId : productId});
+                let data;
+
+                // Update the quantity of the line item if it exists
+                if(!isNil(cartItem))
+                    data = await api.put(`/carts/${cartId}/items/${cartItem.Id}?price=skip&rules=skip&lookups=${cartItemLookups}`, {
+                        LineItem : {
+                            Id : cartItem.Id,
+                            Apttus_Config2__Quantity__c : cartItem.Quantity + quantity,
+                            Apttus_Config2__PrimaryLineNumber__c: cartItem.PrimaryLineNumber,
+                            Apttus_Config2__OptionId__c: null,
+                            Apttus_Config2__PriceListItemId__c : priceListItemId
+                        }
+                    })
+                
+                // Otherwise add the new item to the cart
+                else
+                    data = await api.post(`/carts/${cartId}/items?price=skip&rules=skip&lookups=${cartItemLookups}`, {
+                        ProductId: productId,
+                        Quantity: quantity,
+                        LineItem : {
+                            Apttus_Config2__PriceListItemId__c : priceListItemId
+                        }
+                    });
+
                 dispatch(addFinish(data));
                 CartApi.priceCart();
             }catch(error){
                 dispatch(fetchFail(error));
             }
-        })
+        });
     },
 
     updateCartItem: (cartItemId, quantity, primaryLineNumber, optionId) => {
@@ -85,12 +190,13 @@ const CartApi = {
 
             try{
                 const cartId = localStorage.getItem('cartId');
-                const data = await api.put(`/carts/${cartId}/items/${cartItemId}?price=skip&rules=skip&lookups=ProductId`, {
+                const data = await api.put(`/carts/${cartId}/items/${cartItemId}?price=skip&rules=skip&lookups=${cartItemLookups}`, {
                     LineItem : {
                         Id: cartItemId,
                         Apttus_Config2__Quantity__c : quantity,
                         Apttus_Config2__PrimaryLineNumber__c: primaryLineNumber,
-                        Apttus_Config2__OptionId__c: optionId
+                        Apttus_Config2__OptionId__c: optionId,
+                        Apttus_Config2__PricingStatus__c: 'Pending'
                     }
                 });
                 dispatch(updateFinish(data));
@@ -116,13 +222,16 @@ const CartApi = {
         })
     },
 
-    priceCart: () => {
+    priceCart: (promotions) => {
         store.dispatch(async dispatch => {
             dispatch(priceStart());
             try{
                 const cartId = localStorage.getItem('cartId');
                 const data = await api.post(`/carts/${cartId}/price?mode=turbo`);
                 dispatch(priceFinish(data));
+
+                if(promotions)
+                    CartApi.fetchPromotions();
             }catch(error){
                 dispatch(fetchFail(error));
             }

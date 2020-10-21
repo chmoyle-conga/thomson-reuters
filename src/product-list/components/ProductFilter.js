@@ -44,11 +44,11 @@ export default class ProductFilter extends React.Component{
             <Accordion defaultActiveKey="0">
                 {
                     this.state.fields.map((field, index) => ([
-                        <Accordion.Toggle as={Button} variant="link" key={field.id + '-toggle'} eventKey={field.id} className="btn-block px-0 py-3 text-body border-bottom">
-                            <div className="d-flex justify-content-between font-weight-bold">
+                        <Accordion.Toggle as={Button} variant="link" key={field.id + '-toggle'} eventKey={field.id} className="btn-block px-0 pb-2 pt-3 text-body border-bottom">
+                            <h5 className="d-flex justify-content-between">
                                 <span>{field.label}</span>
                                 <span>+</span>
-                            </div>
+                            </h5>
                         </Accordion.Toggle>,
                         <Accordion.Collapse key={field.id + '-collapse'} eventKey={field.id}>
                             <ProductFilterType field={field.name}/>

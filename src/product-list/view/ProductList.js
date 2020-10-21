@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import { ApiService } from '../../shared/Api';
 import ProductMedia from '../components/ProductMedia';
 import ProductFilter from '../components/ProductFilter';
+import './ProductList.scss';
 
 export default class ProductList extends React.Component{
     constructor(){
@@ -29,7 +30,7 @@ export default class ProductList extends React.Component{
         if(!products)
             return <div>Loading...</div>
         else{
-            return <div>
+            return <div className="product-list">
                 <div className="my-3">
                     <CatalogBreadcrumb/>    
                 </div>

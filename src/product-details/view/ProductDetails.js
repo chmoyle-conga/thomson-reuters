@@ -32,9 +32,9 @@ export default class ProductDetails extends React.Component{
         });
     }
 
-    addToCart(productId){
+    addToCart(product){
         this.setState({loading: true});
-        CartApi.addToCart(productId, 1);
+        CartApi.addToCart(product.Id, 1, product.PriceLists[0].Id);
     }
 
     render(){
@@ -101,7 +101,7 @@ export default class ProductDetails extends React.Component{
                                 </Col>
                             </Form.Group>
 
-                            <Button variant="primary" size="lg" onClick={(e) => this.addToCart(this.state.product.Id)} disabled={this.state.loading}>Add to Cart</Button>
+                            <Button variant="primary" size="lg" onClick={(e) => this.addToCart(this.state.product)} disabled={this.state.loading}>Add to Cart</Button>
                         </div>
                         <div className="mb-4">
                             <h1 className="pb-4 font-weight-light border-bottom border-secondary mb-4">What's Inside</h1>

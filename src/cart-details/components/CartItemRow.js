@@ -7,6 +7,24 @@ import CartApi from '../../store/CartApi';
 import Currency from 'react-currency-formatter';
 import { Link } from 'react-router-dom';
 
+
+class RowPrice extends React.Component{
+
+
+    render(){
+        const { line } = this.props;
+        if(line.IncentiveAdjustmentAmount < 0){
+            return <div className="d-flex flex-column align-items-end">
+                <strike><Currency quantity={line.BaseExtendedPrice} currency="USD"/></strike>
+                <span><Currency quantity={line.IncentiveAdjustmentAmount} currency="USD"/></span>
+                <strong><Currency quantity={line.NetPrice} currency="USD"/></strong>
+            </div>
+        }else{
+            return <strong><Currency quantity={line.NetPrice} currency="USD"/></strong>
+        }
+    }
+}
+
 export default class CartItemRow extends React.Component{
 
     constructor(props){
@@ -45,7 +63,7 @@ export default class CartItemRow extends React.Component{
                     <strong>Pricing Terms:</strong> One Time Purchase
                 </p>
                 <p>
-                    <strong>Price:</strong> <Currency quantity={line.NetPrice} currency="USD"/>
+                    <strong>Price:</strong> <Currency quantity={line.BaseExtendedPrice} currency="USD"/>
                 </p>
 
                 <Button variant="link" className="px-0" onClick={this.remove}>Remove</Button>
@@ -60,9 +78,7 @@ export default class CartItemRow extends React.Component{
             </Col>
             <Col xs="2" className="d-flex justify-content-end">
                 {
-                    line.NetPrice 
-                    ? <strong><Currency quantity={line.NetPrice} currency="USD"/></strong>
-                    : <span>-</span>
+                    <RowPrice line={line}></RowPrice>
                 }
                 
             </Col>

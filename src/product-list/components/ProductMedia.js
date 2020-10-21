@@ -25,26 +25,28 @@ export default class ProductMedia extends React.Component{
                 <h5>
                     <Link to={`/products/${this.product.Id}`} className="text-info">{this.product.Name}</Link>
                 </h5>
-                <div>
-                    <strong>Formats:</strong> {this.product.Format}
-                </div>
-                <div>
-                    <strong>Publisher:</strong> {this.product.Publisher_Description}
-                </div>
-                <div>
-                    <strong>Author:</strong> {this.product.LCRM_Author}
-                </div>
-                <div>
-                    <strong>Practice Area:</strong> {this.product.APTS_Find_Law_Practice_Area}
-                </div>
-                <div>
-                    <strong>Jurisdiction:</strong> {this.product.Apttus_Filter_Jurisdiction}
-                </div>
-                <div>
-                    <strong>Availability:</strong> {this.product.APTS_Inventory_Available}
-                </div>
-                <div>
-                    <strong>Publication Date:</strong> {this.product.LCRM_Publication_Date}
+                <div className="media-details">
+                    <div>
+                        <strong>Formats:</strong> {this.product.Format}
+                    </div>
+                    <div>
+                        <strong>Publisher:</strong> {this.product.Publisher_Description}
+                    </div>
+                    <div>
+                        <strong>Author:</strong> {this.product.LCRM_Author}
+                    </div>
+                    <div>
+                        <strong>Practice Area:</strong> {this.product.APTS_Find_Law_Practice_Area}
+                    </div>
+                    <div>
+                        <strong>Jurisdiction:</strong> {this.product.Apttus_Filter_Jurisdiction}
+                    </div>
+                    <div>
+                        <strong>Availability:</strong> {this.product.APTS_Inventory_Available}
+                    </div>
+                    <div>
+                        <strong>Publication Date:</strong> {this.product.LCRM_Publication_Date}
+                    </div>
                 </div>
 
                 <div className="mt-3 font-weight-bold">
