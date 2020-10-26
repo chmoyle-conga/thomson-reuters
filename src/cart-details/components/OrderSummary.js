@@ -2,19 +2,35 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { faLock, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import Currency from 'react-currency-formatter';
 import { Link } from 'react-router-dom';
 
-export default class OrderSummary extends React.Component{
-    
-    constructor(props){
-        super(props);
-        console.log(this.props);
-    }
+
+class CheckoutButton extends React.Component{
 
     render(){
-        const { total, checkoutHidden } = this.props;
+        const { loading } = this.props;
+
+        if(loading)
+            return <div className="d-flex justify-content-center">
+                <FontAwesomeIcon icon={faSpinner} spin size="lg" className="spinner"/>
+            </div>
+        else
+            return <Link to={`/checkout`} className="text-decoration-none">
+                <Button type="submit" className="btn-block" variant="primary" size="lg">
+                    Continue to Checkout
+                    <FontAwesomeIcon icon={faLock} className="ml-3" size="sm"/>
+                </Button>
+            </Link>
+    }
+
+}
+
+export default class OrderSummary extends React.Component{
+
+    render(){
+        const { total, checkoutHidden, loading } = this.props;
         return <Card className="py-3">
             <Card.Body>
                 <h5>Order Summary</h5>
@@ -43,12 +59,7 @@ export default class OrderSummary extends React.Component{
 
                 {
                     !checkoutHidden &&
-                        <Link to={`/checkout`} className="text-decoration-none">
-                            <Button type="submit" className="btn-block" variant="primary" size="lg">
-                                Continue to Checkout
-                                <FontAwesomeIcon icon={faLock} className="ml-3" size="sm"/>
-                            </Button>
-                        </Link>
+                    <CheckoutButton loading={loading}/>
                 }
                 
             </Card.Body>

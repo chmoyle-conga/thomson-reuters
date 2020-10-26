@@ -20,10 +20,6 @@ class Promo extends React.Component{
         };
     }
 
-    async componentDidMount(){
-        CartApi.fetchPromotions();
-    }
-
     handleSubmit(evt){
         evt.preventDefault();
         CartApi.applyPromotion(this.state.value);

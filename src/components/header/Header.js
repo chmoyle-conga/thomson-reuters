@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import MiniCart from '../mini-cart/MiniCart';
+import { Link } from 'react-router-dom';
 
 export default class Header extends React.Component{
 
@@ -22,9 +23,12 @@ export default class Header extends React.Component{
             <nav className="navbar bottom navbar-light bg-light border-bottom border-secondary navbar-expand-sm">
                 <div className="container align-items-stretch justify-content-between d-flex">
                     <div className="d-flex align-items-center">
-                        <button className="navbar-brand btn btn-link">
-                            <img src="./header_logo_fr.jpg" width="196" className="d-inline-block align-top" alt="" loading="lazy"></img>
-                        </button>
+                        <Link to="/products">
+                            <button className="navbar-brand btn btn-link">
+                                <img src="./header_logo_fr.jpg" width="196" className="d-inline-block align-top" alt="" loading="lazy"></img>
+                            </button>
+                        </Link>
+                        
                         <span className="logo-border d-flex align-self-center h-75 border-secondary border py-2"></span>
                         <small className="text-uppercase font-weight-bold">Canada</small>
                     </div>

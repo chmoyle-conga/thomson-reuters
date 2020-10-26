@@ -1,10 +1,14 @@
 import React from 'react';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { OrderSummary } from '../components/OrderSummary';
 import './Review.scss';
 import Currency from 'react-currency-formatter';
+import { ApiService } from '../../shared/Api';
+import { Link } from 'react-router-dom';
 import CartApi from '../../store/CartApi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 class RowPrice extends React.Component{
 
@@ -83,12 +87,44 @@ class TotalLine extends React.Component{
 }
 
 class Review extends React.Component{
-    placeOrder(){
-        CartApi.checkout();
+    api = new ApiService();
+    state = {
+        show: false,
+        order : {}
+    }
+    async placeOrder(){
+        const cartId = localStorage.getItem('cartId');
+        this.setState({
+            loading: true
+        });
+        // Stubbed in required fields
+        const order = await this.api.post(`/carts/${cartId}/checkout`, {
+            Contact: {
+                Email: 'chmoyle@conga.com',
+                LastName: 'Moyle',
+                FirstName: 'Christopher',
+                MailingStreet: '1400 Fashion Island Blvd #100',
+                MailingCity: 'San Mateo',
+                MailingPostalCode: '94404'
+            }
+        });
+
+        this.setState({
+            show: true,
+            order: order,
+            loading: false
+        })
+    }
+
+    handleClose(){
+        localStorage.removeItem('cartId');
+        CartApi.refresh();
+        this.setState({show: false});
     }
 
     render(){
         const { cart } = this.props;
+        const { show, order, loading } = this.state;
         if(cart)
             return <div className="review">
                 <h1 className="my-5 font-weight-normal">Review Order</h1>
@@ -111,13 +147,33 @@ class Review extends React.Component{
                                 className="my-3"
                                 label="I agree Terms and Conditions"
                             />
-                            <Button variant="primary" size="lg" className="mt-3" onClick={this.placeOrder.bind(this)}>Place Order</Button>
+                            {
+                                (loading)
+                                ? <FontAwesomeIcon icon={faSpinner} spin size="lg" className="spinner"/>
+                                : <Button variant="primary" size="lg" className="mt-3" onClick={this.placeOrder.bind(this)}>Place Order</Button>
+                            }
                         </div>
                     </Col>
                     <Col xs={{span: 4, offset: 1}}>
                         <OrderSummary cart={cart.cart}></OrderSummary>
                     </Col>
                 </Row>
+
+                <Modal show={show} onHide={this.handleClose.bind(this)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Order Placed</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        Your order <b>{order.Name}</b> has been placed!
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Link to={"/products"}>
+                            <Button variant="primary" onClick={this.handleClose.bind(this)}>
+                                Continue
+                            </Button>
+                        </Link>
+                    </Modal.Footer>
+                </Modal>
             </div>
         else
             return <div>Loading...</div>

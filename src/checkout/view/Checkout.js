@@ -72,7 +72,7 @@ class Checkout extends React.Component{
     render(){
         const { total, cart } = this.props;
         const { activeKey, billingAddressSame, billingMethod, shippingMethod } = this.state;
-
+        console.log(cart);
         if(!cart)
             return <div></div>
         else

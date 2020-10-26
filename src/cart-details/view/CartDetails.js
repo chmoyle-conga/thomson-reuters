@@ -4,11 +4,12 @@ import { Row, Col, Breadcrumb } from 'react-bootstrap';
 import OrderSummary from '../components/OrderSummary';
 import Promo from '../components/Promo';
 import CartItemRow from '../components/CartItemRow';
+import './CartDetails.scss';
 
 class CartDetails extends React.Component{
 
     render(){
-        const { lines, total } = this.props;
+        const { lines, total, loading } = this.props;
         if(lines && lines.length > 0){
             return <div>
 
@@ -46,7 +47,7 @@ class CartDetails extends React.Component{
                     <Col xs="12" sm="4" className="pl-5">
                         <Promo lines={lines}/>
 
-                        <OrderSummary total={total}/>
+                        <OrderSummary total={total} loading={loading}/>
                     </Col>
                 </Row>
             </div>
@@ -58,7 +59,8 @@ class CartDetails extends React.Component{
 const mapStateToProps = state => {
     return {
         lines: state.cart.lines,
-        total: state.cart.total
+        total: state.cart.total,
+        loading: state.cart.loading
     }   
 };
 

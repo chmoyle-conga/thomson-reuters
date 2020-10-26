@@ -1,7 +1,7 @@
 import { CART_ACTION } from './Cart';
 import store from './Store';
 import { ApiService } from "../shared/Api";
-import { find, first, get, isEmpty, isNil, join, map, uniq, compact} from 'lodash';
+import { find, first, get, isEmpty, isNil, join, map, uniq, compact, flatten} from 'lodash';
 
 const api = new ApiService();
 
@@ -48,6 +48,11 @@ const priceFinish = data => ({
     payload: data
 })
 
+const updateStart = data => ({
+    type: CART_ACTION.START_UPDATE,
+    payload: data
+})
+
 const cartItemLookups = `ProductId,PriceListItemId`;
 
 const CartApi = {
@@ -57,12 +62,13 @@ const CartApi = {
             try{    
                 const cartId = localStorage.getItem('cartId');
                 
-                const cart = (isNil(cartId)) ? first(await api.post(`/carts`, {})) : await api.get(`/carts/${cartId}?children=SummaryGroups`);
+                const cart = (isNil(cartId)) ? first(await api.post(`/carts?children=SummaryGroups&lookups=AccountId,ShipToAccountId`, {})) : await api.get(`/carts/${cartId}?children=SummaryGroups&lookups=AccountId,ShipToAccountId`);
                 localStorage.setItem('cartId', cart.Id);
                 if(cartId)
-                    cart.LineItems = await api.get(`/cartitems?condition[0]=ConfigurationId,Equal,${cartId}&lookups=${cartItemLookups}`);
+                    cart.LineItems = await api.get(`/cartitems?condition[0]=ConfigurationId,Equal,${cartId}&lookups=${cartItemLookups}&children=AdjustmentLineItems`);
                 
                 dispatch(fetchFinish(cart));
+                CartApi.fetchPromotions();
             }catch(error){
                 dispatch(fetchFail(error));
             }
@@ -71,7 +77,8 @@ const CartApi = {
 
     fetchPromotions: () => {
         store.dispatch(async dispatch => {
-            const incentiveIds = compact(uniq(map(store.getState().cart.lines, 'IncentiveId')));
+            const adjustmentLineItems = flatten(map(store.getState().cart.lines, 'AdjustmentLineItems'));
+            const incentiveIds = compact(uniq(map(adjustmentLineItems, 'IncentiveId')));
             if(!isEmpty(incentiveIds)){
                 const incentives = await api.post(`/apttus_config2__incentive__c/query`, {
                     conditions : [
@@ -88,38 +95,16 @@ const CartApi = {
         });
     },
 
-    checkout: () => {
-        store.dispatch(async dispatch => {
-            dispatch({type: 'CHECKOUT_START'});
-            try{
-                const cartId = localStorage.getItem('cartId');
-                
-                // Stubbed in required fields
-                await api.post(`/carts/${cartId}/checkout`, {
-                    Contact: {
-                        Email: 'chmoyle@conga.com',
-                        LastName: 'Moyle',
-                        FirstName: 'Christopher',
-                        MailingStreet: '1400 Fashion Island Blvd #100',
-                        MailingCity: 'San Mateo',
-                        MailingPostalCode: '94404'
-                    }
-                });
-            }catch(error){
-                dispatch({type: 'CHECKOUT_FAIL', payload: error});
-            }
-        })
-    },
-
     applyPromotion: (couponCode) => {
         store.dispatch(async dispatch => {
             dispatch(fetchStart());
             try{
                 const cartId = localStorage.getItem('cartId');
-                await api.post(`/carts/${cartId}/promotions?mode=turbo&price=skip`, {
+                const data = await api.post(`/carts/${cartId}/promotions?mode=turbo&price=default`, {
                     code: couponCode
                 })
-                CartApi.priceCart(true);
+                dispatch(priceFinish(get(data, 'CartResponse')));
+                CartApi.fetchPromotions();
             }catch(error){
                 dispatch(fetchFail(error));
             }
@@ -131,8 +116,9 @@ const CartApi = {
             dispatch(fetchStart());
             try{
                 const cartId = localStorage.getItem('cartId');
-                await api.del(`/carts/${cartId}/promotions/${couponCode}?mode=turbo&price=skip`);
-                CartApi.priceCart(true);
+                const data = await api.del(`/carts/${cartId}/promotions/${couponCode}?mode=turbo&price=default`);
+                dispatch(priceFinish(get(data, 'CartResponse')));
+                CartApi.fetchPromotions();
             }catch(error){
                 dispatch(fetchFail(error));
             }
@@ -162,7 +148,10 @@ const CartApi = {
                             Apttus_Config2__Quantity__c : cartItem.Quantity + quantity,
                             Apttus_Config2__PrimaryLineNumber__c: cartItem.PrimaryLineNumber,
                             Apttus_Config2__OptionId__c: null,
-                            Apttus_Config2__PriceListItemId__c : priceListItemId
+                            Apttus_Config2__PriceListItemId__c : priceListItemId,
+                            Apttus_Config2__PricingStatus__c: 'Pending',
+                            QFTotalqty__c: quantity,
+                            TotalQuantity: quantity
                         }
                     })
                 
@@ -172,12 +161,14 @@ const CartApi = {
                         ProductId: productId,
                         Quantity: quantity,
                         LineItem : {
-                            Apttus_Config2__PriceListItemId__c : priceListItemId
+                            Apttus_Config2__PriceListItemId__c : priceListItemId,
+                            QFTotalqty__c: quantity,
+                            TotalQuantity: quantity 
                         }
                     });
 
                 dispatch(addFinish(data));
-                CartApi.priceCart();
+                CartApi.priceCart(true);
             }catch(error){
                 dispatch(fetchFail(error));
             }
@@ -186,7 +177,11 @@ const CartApi = {
 
     updateCartItem: (cartItemId, quantity, primaryLineNumber, optionId) => {
         store.dispatch(async dispatch => {
-            dispatch(fetchStart());
+            dispatch(updateStart({
+                CartItemId: cartItemId,
+                Quantity: quantity,
+                TotalQuantity: quantity
+            }));
 
             try{
                 const cartId = localStorage.getItem('cartId');
@@ -196,11 +191,13 @@ const CartApi = {
                         Apttus_Config2__Quantity__c : quantity,
                         Apttus_Config2__PrimaryLineNumber__c: primaryLineNumber,
                         Apttus_Config2__OptionId__c: optionId,
-                        Apttus_Config2__PricingStatus__c: 'Pending'
+                        Apttus_Config2__PricingStatus__c: 'Pending',
+                        QFTotalqty__c: quantity,
+                        TotalQuantity: quantity
                     }
                 });
                 dispatch(updateFinish(data));
-                CartApi.priceCart();
+                CartApi.priceCart(true);
             }catch(error){
                 dispatch(fetchFail(error));
             }
@@ -215,7 +212,7 @@ const CartApi = {
                 const cartId = localStorage.getItem('cartId');
                 await api.del(`/carts/${cartId}/items/${lineItemId}?price=skip&rules=skip`);
                 dispatch(removeFinish(lineItemId));
-                CartApi.priceCart();
+                CartApi.priceCart(true);
             }catch(error){
                 dispatch(fetchFail(error));
             }

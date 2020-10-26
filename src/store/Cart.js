@@ -1,5 +1,5 @@
 
-import { compact, values, merge, keyBy, groupBy, clone } from 'lodash';
+import { compact, values, merge, keyBy, groupBy, clone, get, filter, isNil, find, set } from 'lodash';
 
 const initialState = {
     lines: [],
@@ -19,18 +19,19 @@ const cart = (state = initialState, action) => {
             return { ...state, loading: true};
 
         case CART_ACTION.FINISH_FETCH:
-            const s = { ...state, loading: false, lines: [...action.payload.LineItems], cart: action.payload, total: groupBy(action.payload.SummaryGroups, 'LineType'), error: null }
+            const s = { ...state, loading: false, lines: [...get(action, 'payload.LineItems', [])], cart: action.payload, total: groupBy(action.payload.SummaryGroups, 'LineType'), error: null }
             return s;
 
         case CART_ACTION.FAIL_FETCH:
             return { ...state, loading: false, error: action.payload }
 
         case CART_ACTION.FINISH_ADD:
-            const newState = { ...state, loading: false, lines: [...state.lines, ...action.payload.LineItems], addedLines: action.payload.LineItems}
+            const newState = { ...state, loading: false, lines: [...state.lines, ...get(action, 'payload.LineItems', [])], addedLines: get(action, 'payload.LineItems', [])}
             return newState;
 
         case CART_ACTION.FINISH_PROMOTION_FETCH:
-            return { ...state, loading: false, promotions: action.payload };
+            const promoState = { ...state, loading: false, promotions: action.payload };
+            return promoState;
 
         case CART_ACTION.CLEAR_ADDED:
             return {...state, addedLines: null};
@@ -41,11 +42,18 @@ const cart = (state = initialState, action) => {
         case CART_ACTION.PRICE_START:
             return { ...state, loading: true }
 
+        case CART_ACTION.START_UPDATE:
+            const line = find(state.lines, {Id: get(action, 'payload.CartItemId')});
+            if(line)
+                set(line, 'Quantity', get(action, 'payload.Quantity'));
+            return {...state, lines: [...state.lines]};
+
         case CART_ACTION.SET_CART:
             return { ...state, cart: clone(action.payload)}
 
         case CART_ACTION.PRICE_FINISH:
-            const ret = { ...state, total: groupBy(action.payload.SummaryGroups, 'LineType'), lines: compact(values(merge(keyBy(state.lines, 'Id'), keyBy(action.payload.LineItems, 'Id')))) }
+            const lines = compact(values(merge(keyBy(state.lines, 'Id'), keyBy(get(action, 'payload.LineItems', []), 'Id'))));
+            const ret = { ...state, total: groupBy(action.payload.SummaryGroups, 'LineType'), lines:  filter(lines, (l) => !isNil(l.Product)), loading: false}
             return ret;
 
         case CART_ACTION.FINISH_UPDATE:
@@ -72,6 +80,7 @@ export const CART_ACTION = {
     FINISH_ADD: 'FINISH_ADD',
     CLEAR_ADDED: 'CLEAR_ADDED',
     FINISH_REMOVE: 'FINISH_REMOVE',
+    START_UPDATE: 'START_UPDATE',
     FINISH_UPDATE: 'FINISH_UPDATE',
     PRICE_START: 'PRICE_START',
     PRICE_FINISH: 'PRICE_FINISH',

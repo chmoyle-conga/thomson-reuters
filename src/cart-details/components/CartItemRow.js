@@ -74,6 +74,8 @@ export default class CartItemRow extends React.Component{
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
                 </Form.Control>
             </Col>
             <Col xs="2" className="d-flex justify-content-end">

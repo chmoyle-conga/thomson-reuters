@@ -8,7 +8,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import CartApi from '../../store/CartApi';
 import { Link } from 'react-router-dom';
-
+import Currency from 'react-currency-formatter';
 
 class AddProductModal extends React.Component{
     constructor(props){
@@ -55,7 +55,7 @@ class AddProductModal extends React.Component{
                                                 <h5 className="font-weight-bold">{line.Product.Name}</h5>
                                                 <div>
                                                     <div>Quantity: {line.Quantity}</div>
-                                                    <div>$163.00 each</div>
+                                                    <div><Currency quantity={line.PriceListItem.ListPrice} currency="USD"/> each</div>
                                                 </div>
                                             </Media.Body>
                                         </Media>

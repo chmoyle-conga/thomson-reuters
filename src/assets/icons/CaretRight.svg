@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Icons/1. UI/Caret - Right</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="8.23223305 6.76776695 9.64644661 5.35355339 16.3535534 12.0606602 9.64644661 18.767767 8.23223305 17.3535534 13.5251263 12.0606602"></polygon>
+    </defs>
+    <g id="Icons/1.-UI/Caret---Right" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Carrot" fill="#4D4D4D" fill-rule="nonzero" xlink:href="#path-1"></use>
+        <g id="🌈-Colour" mask="url(#mask-2)">
+            <g transform="translate(12.000000, 12.000000) rotate(90.000000) translate(-12.000000, -12.000000) " id="Colors/Primary/TR-Dark-Gray">
+                <g transform="translate(0.000000, -0.000000)">
+                    <polygon id="#4D4D4D" fill="#4D4D4D" points="0 0 24 0 24 24 0 24"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
